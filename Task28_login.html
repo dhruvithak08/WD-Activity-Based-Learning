@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Registration and Login</title>
+<style>
+ * { margin: 0; padding: 0; box-sizing: border-box; }
+ body { font-family: "Segoe UI", Arial, sans-serif; background: linear-gradient(135deg, #f97316, #db2777); min-height: 100vh;
+display: flex; flex-direction: column; align-items: center; padding: 30px 15px; }
+ h1 { color: #fff; margin-bottom: 20px; }
+ .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center; }
+ .tabs button { padding: 10px 18px; border: none; border-radius: 20px; background: rgba(255,255,255,.3); color: #fff; cursor:
+pointer; font-size: 14px; }
+ .tabs button.active { background: #fff; color: #db2777; font-weight: bold; }
+ .page { display: none; background: #fff; width: 100%; max-width: 420px; padding: 30px; border-radius: 14px; box-shadow: 0 10px 30px
+rgba(0,0,0,.2); }
+ .page.show { display: block; }
+ .page h2 { margin-bottom: 18px; color: #be185d; text-align: center; }
+ .field { margin-bottom: 15px; }
+ label { display: block; font-weight: 600; margin-bottom: 5px; font-size: 14px; color: #334155; }
+ input, select, textarea { width: 100%; padding: 10px; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 14px; }
+ input:focus, select:focus, textarea:focus { outline: none; border-color: #db2777; box-shadow: 0 0 0 3px #fbcfe8; }
+ input.touched:invalid { border-color: #dc2626; background: #fef2f2; }
+ input.touched:valid { border-color: #16a34a; }
+ .error { color: #dc2626; font-size: 12px; margin-top: 4px; display: none; }
+ input.touched:invalid + .error { display: block; }
+ button.submit { width: 100%; padding: 12px; background: #db2777; color: #fff; border: none; border-radius: 8px; font-size: 16px;
+cursor: pointer; }
+ button.submit:hover { background: #be185d; }
+ .small { font-size: 13px; text-align: center; margin-top: 12px; color: #64748b; }
+ .check { display: flex; gap: 8px; align-items: center; }
+ .check input { width: auto; }
+</style>
+</head>
+<body>
+ <h1>🔐 SecureAccess</h1>
+ <div class="tabs">
+ <button class="active" onclick="show('register', this)">Register</button>
+ <button onclick="show('login', this)">Login</button>
+ <button onclick="show('forgot', this)">Forgot Password</button>
+ <button onclick="show('profile', this)">Profile Setup</button>
+ </div>
+ <section id="register" class="page show">
+ <h2>Create Account</h2>
+ <form onsubmit="return done(event, 'Registration successful!')">
+ <div class="field"><label for="rname">Full Name</label><input id="rname" type="text" minlength="3" required><p
+class="error">Name must be at least 3 characters.</p></div>
+ <div class="field"><label for="remail">Email Address</label><input id="remail" type="email" required><p class="error">Enter a
+valid email address.</p></div>
+ <div class="field"><label for="rpass">Password</label><input id="rpass" type="password" minlength="8" pattern="(?=.*\d)(?=.*[AZ]).{8,}" required><p class="error">Min 8 chars, 1 uppercase letter and 1 number.</p></div>
+ <div class="field"><label for="rcpass">Confirm Password</label><input id="rcpass" type="password" required><p
+class="error">Passwords must match.</p></div>
+ <div class="field check"><input id="terms" type="checkbox" required><label for="terms">I agree to the terms</label></div>
+ <button class="submit" type="submit">Register</button>
+ </form>
+ </section>
+ <section id="login" class="page">
+ <h2>Login</h2>
+ <form onsubmit="return done(event, 'Login successful!')">
+ <div class="field"><label for="lemail">Email Address</label><input id="lemail" type="email" required><p class="error">Enter a
+valid email address.</p></div>
+ <div class="field"><label for="lpass">Password</label><input id="lpass" type="password" minlength="8" required><p
+class="error">Password must be at least 8 characters.</p></div>
+ <div class="field check"><input id="remember" type="checkbox"><label for="remember">Remember me</label></div>
+ <button class="submit" type="submit">Login</button>
+ <p class="small">Don't have an account? Click Register above.</p>
+ </form>
+ </section>
+ <section id="forgot" class="page">
+ <h2>Password Recovery</h2>
+ <form onsubmit="return done(event, 'Reset link sent to your email!')">
+ <div class="field"><label for="femail">Registered Email</label><input id="femail" type="email" required><p class="error">Enter
+a valid email address.</p></div>
+ <button class="submit" type="submit">Send Reset Link</button>
+ <p class="small">We will email you a link to reset your password.</p>
+ </form>
+ </section>
+ <section id="profile" class="page">
+ <h2>Profile Setup</h2>
+ <form onsubmit="return done(event, 'Profile saved!')">
+ <div class="field"><label for="uname">Username</label><input id="uname" type="text" pattern="[a-z0-9_]{4,15}" required><p
+class="error">4–15 lowercase letters, numbers or _.</p></div>
+ <div class="field"><label for="phone">Phone</label><input id="phone" type="tel" pattern="[0-9]{10}" required><p
+class="error">Enter a 10-digit phone number.</p></div>
+ <div class="field"><label for="dob">Date of Birth</label><input id="dob" type="date" required></div>
+ <div class="field"><label for="gender">Gender</label><select id="gender"><option>Female</option><option>Male</option>
+<option>Other</option></select></div>
+ <div class="field"><label for="bio">About You</label><textarea id="bio" rows="3" maxlength="200"></textarea></div>
+ <button class="submit" type="submit">Save Profile</button>
+ </form>
+ </section>
+ <script>
+ function show(id, btn) {
+ document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
+ document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+ document.getElementById(id).classList.add('show');
+ btn.classList.add('active');
+ }
+ document.querySelectorAll('input').forEach(i => i.addEventListener('blur', () => i.classList.add('touched')));
+ const p = document.getElementById('rpass'), c = document.getElementById('rcpass');
+ c.addEventListener('input', () => c.setCustomValidity(c.value === p.value ? '' : 'mismatch'));
+ function done(e, msg) { e.preventDefault(); alert(msg); return false; }
+ </script>
+</body>
+</html>
